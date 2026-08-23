@@ -1,0 +1,59 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { getAssetPath } from "@/utils/withBase";
+import { publications, type Publication } from "@/data/publications";
+import config from "@/config";
+
+export const getStaticPaths = (() =>
+  publications.map(publication => ({
+    params: { slug: publication.slug },
+    props: { publication },
+  }))) satisfies GetStaticPaths;
+
+const { publication } = Astro.props as { publication: Publication };
+---
+
+<Layout
+  title={`${publication.title} | ${config.site.title}`}
+  description={`${publication.title}, published in ${publication.venue}.`}
+>
+  <Header />
+  <Breadcrumb />
+  <Main pageTitle={publication.title}>
+    <div class="border-border rounded-xl border p-6">
+      <dl class="grid gap-4 sm:grid-cols-[7rem_1fr]">
+        <dt class="text-muted-foreground">Year</dt>
+        <dd>{publication.year}</dd>
+        <dt class="text-muted-foreground">Venue</dt>
+        <dd>{publication.venue}</dd>
+      </dl>
+      <div class="mt-7 flex flex-wrap gap-x-6 gap-y-3">
+        <LinkButton
+          href={publication.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent font-semibold underline decoration-dashed underline-offset-4"
+        >
+          View publication
+        </LinkButton>
+        {
+          publication.localPaper && (
+            <LinkButton
+              href={getAssetPath(publication.localPaper)}
+              class="font-semibold underline decoration-dashed underline-offset-4"
+            >
+              Download PDF
+            </LinkButton>
+          )
+        }
+      </div>
+    </div>
+  </Main>
+  <Footer />
+</Layout>
