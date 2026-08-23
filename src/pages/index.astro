@@ -1,0 +1,96 @@
+---
+import { getEntry, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import { getAssetPath } from "@/utils/withBase";
+
+const about = await getEntry("pages", "about");
+
+if (!about) {
+  throw new Error("Missing content entry: `src/content/pages/about.md`");
+}
+
+const { Content: AboutContent } = await render(about);
+---
+
+<Layout>
+  <Header />
+  <main id="main-content" class="app-layout py-10 sm:py-16">
+    <section
+      class="border-border grid items-center gap-10 border-b pb-12 sm:grid-cols-[1fr_15rem] sm:gap-12"
+    >
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+          Xiaoxu Cao
+        </h1>
+        <p class="mt-6 text-lg leading-8">
+          I am a robotics PhD and autonomous-driving algorithm engineer focused
+          on motion planning, vehicle control, and intelligent systems.
+        </p>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Currently at SenseTime in Shanghai, working on safe and efficient
+          planning and control for autonomous vehicles.
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <img
+          src={getAssetPath("profile.png")}
+          alt="Portrait of Xiaoxu Cao"
+          width="433"
+          height="575"
+          class="border-border h-auto w-52 rounded-2xl border shadow-sm sm:w-60"
+        />
+        <div class="mt-4 flex items-center justify-center gap-3">
+          <Socials />
+          <span class="text-muted-foreground">·</span>
+          <a
+            href="https://www.researchgate.net/profile/Xiaoxu-Cao"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-accent text-sm underline decoration-dashed underline-offset-4"
+          >
+            ResearchGate
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="border-border scroll-mt-6 border-b py-12">
+      <h2 class="text-2xl font-semibold tracking-wide">About me</h2>
+      <div class="app-prose mt-6">
+        <AboutContent />
+      </div>
+    </section>
+
+    <section class="py-12">
+      <h2 class="text-2xl font-semibold tracking-wide">Focus</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        <article class="border-border rounded-xl border p-5">
+          <h3 class="font-semibold">Autonomous driving</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-6">
+            Decision-making, motion planning, and control for production vehicle
+            systems.
+          </p>
+        </article>
+        <article class="border-border rounded-xl border p-5">
+          <h3 class="font-semibold">Robotics</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-6">
+            Algorithm design for robotic systems operating in dynamic
+            environments.
+          </p>
+        </article>
+        <article class="border-border rounded-xl border p-5">
+          <h3 class="font-semibold">Planning &amp; control</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-6">
+            Optimization, model predictive control, and search-based motion
+            planning.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer noMarginTop />
+</Layout>
